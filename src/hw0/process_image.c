@@ -6,19 +6,42 @@
 
 float get_pixel(image im, int x, int y, int c)
 {
-    // TODO Fill this in
-    return 0;
+    int column;
+    int row;
+
+    if (x < 0) {
+        column = 0;
+    } else if (x > im.w) {
+        column = im.w;
+    } else {
+        column = x;
+    }
+
+    if (y < 0) {
+        row = 0;
+    } else if (y > im.h) {
+        row = im.h;
+    } else {
+        row = y;
+    }
+
+    return im.data[column + row * im.w + c * im.w * im.h];
 }
 
 void set_pixel(image im, int x, int y, int c, float v)
 {
-    // TODO Fill this in
+    im.data[x + y * im.w + c * im.w * im.h] = v;
 }
 
 image copy_image(image im)
 {
     image copy = make_image(im.w, im.h, im.c);
-    // TODO Fill this in
+
+    int im_size = im.c * im.w * im.h;
+    for (int i = 0; i < im_size; i++) {
+        copy.data[i] = im.data[i];
+    }
+
     return copy;
 }
 
@@ -26,13 +49,25 @@ image rgb_to_grayscale(image im)
 {
     assert(im.c == 3);
     image gray = make_image(im.w, im.h, 1);
-    // TODO Fill this in
+
+    int width = im.w;
+    int height = im.h;
+
+    for (int i = 0; i <= width; i++) {
+        for (int j = 0; j <= height; j++) {
+            float grayscale = (0.299 * get_pixel(im, i, j, 0)) 
+                + (0.587 * get_pixel(im, i, j, 1)) 
+                + (0.114 * get_pixel(im, i, j, 2));
+            gray.data[i + j * width] = grayscale;
+        }
+    }
+
     return gray;
 }
 
 void shift_image(image im, int c, float v)
 {
-    // TODO Fill this in
+    
 }
 
 void clamp_image(image im)
