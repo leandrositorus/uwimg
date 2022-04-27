@@ -809,7 +809,7 @@ void test_hw0()
     // test_set_pixel();
     // test_copy();
     test_shift();
-    // test_clamp();
+    test_clamp();
     // test_grayscale();
     // test_rgb_to_hsv();
     // test_hsv_to_rgb();
