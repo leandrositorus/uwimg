@@ -59,7 +59,7 @@ image rgb_to_grayscale(image im)
             float grayscale = (0.299 * get_pixel(im, i, j, 0)) 
                 + (0.587 * get_pixel(im, i, j, 1)) 
                 + (0.114 * get_pixel(im, i, j, 2));
-            gray.data[i + width * j] = grayscale;
+            set_pixel(gray, i, j, 0, grayscale);
         }
     }
 
