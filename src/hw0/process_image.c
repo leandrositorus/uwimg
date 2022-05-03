@@ -86,9 +86,9 @@ void clamp_image(image im)
     for (int c = 0; c <= im.c; c++) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j <= height; j++) {
-                float value = im.data[i + j * width + c * width * height];
-                if (value < 0) im.data[i + j * width + c * width * height] = 0;
-                else if (value > 1) im.data[i + j * width + c * width * height] = 1;
+                float value = get_pixel(im, i, j, c);
+                if (value < 0) set_pixel(im, i, j, c, 0);
+                else if (value > 1) set_pixel(im, i, j, c, 1);
             }
         }
     }
