@@ -48,17 +48,18 @@ image copy_image(image im)
 image rgb_to_grayscale(image im)
 {
     assert(im.c == 3);
-    image gray = make_image(im.w, im.h, 1);
 
     int width = im.w;
     int height = im.h;
 
-    for (int i = 0; i <= width; i++) {
-        for (int j = 0; j <= height; j++) {
+    image gray = make_image(im.w, im.h, 1);
+
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
             float grayscale = (0.299 * get_pixel(im, i, j, 0)) 
                 + (0.587 * get_pixel(im, i, j, 1)) 
                 + (0.114 * get_pixel(im, i, j, 2));
-            gray.data[i + j * width] = grayscale;
+            gray.data[i + width * j] = grayscale;
         }
     }
 
@@ -70,8 +71,8 @@ void shift_image(image im, int c, float v)
     int width = im.w;
     int height = im.h;
 
-    for (int i = 0; i <= width; i++) {
-        for (int j = 0; j <= height; j++) {
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
             im.data[i + j * width + c * width * height] +=  v;
         }
     }
@@ -85,7 +86,7 @@ void clamp_image(image im)
 
     for (int c = 0; c <= im.c; c++) {
         for (int i = 0; i < width; i++) {
-            for (int j = 0; j <= height; j++) {
+            for (int j = 0; j < height; j++) {
                 float value = get_pixel(im, i, j, c);
                 if (value < 0) set_pixel(im, i, j, c, 0);
                 else if (value > 1) set_pixel(im, i, j, c, 1);
