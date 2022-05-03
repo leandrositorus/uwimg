@@ -73,7 +73,7 @@ void shift_image(image im, int c, float v)
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
-            im.data[i + j * width + c * width * height] +=  v;
+            set_pixel(im, i, j, c, get_pixel(im, i, j, c) + v);
         }
     }
 }
