@@ -805,13 +805,13 @@ void make_matrix_test()
 
 void test_hw0()
 {
-    test_get_pixel();
-    test_set_pixel();
-    test_copy();
-    test_shift();
-    test_clamp();
-    test_grayscale();
-    // test_rgb_to_hsv();
+    // test_get_pixel();
+    // test_set_pixel();
+    // test_copy();
+    // test_shift();
+    // test_clamp();
+    // test_grayscale();
+    test_rgb_to_hsv();
     // test_hsv_to_rgb();
     printf("%d tests, %d passed, %d failed\n", tests_total, tests_total-tests_fail, tests_fail);
 }

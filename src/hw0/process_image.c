@@ -83,8 +83,7 @@ void clamp_image(image im)
     int width = im.w;
     int height = im.h;
 
-
-    for (int c = 0; c <= im.c; c++) {
+    for (int c = 0; c < im.c; c++) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 float value = get_pixel(im, i, j, c);
@@ -109,22 +108,25 @@ float three_way_min(float a, float b, float c)
     return (a < b) ? ( (a < c) ? a : c) : ( (b < c) ? b : c) ;
 }
 
+float set_hue(float hue_gamma) {
+    return hue_gamma < 0 ? (hue_gamma / 6) + 1 : hue_gamma / 6;
+}
+
+
 void rgb_to_hsv(image im)
 {
     int width = im.w;
     int height = im.h;
 
-    for (int w = 0; w <= width; w++) {
-        for (int h = 0; h <= height; h++) {
+    for (int w = 0; w < width; w++) {
+        for (int h = 0; h < height; h++) {
             // value
             float value = three_way_max(get_pixel(im, w, h, 0), 
                 get_pixel(im, w, h, 1), get_pixel(im, w, h, 2));
-            if (w == 0 && h == 0) printf("value: %f\n", value);
-            
+
             // saturation
             float min = three_way_min(get_pixel(im, w, h, 0), 
                 get_pixel(im, w, h, 1), get_pixel(im, w, h, 2));
-            if (w == 0 && h == 0) printf("min: %f\n", min);
             float chroma = value - min;
             float saturation = value == 0 ? 0 : chroma / value;
             
@@ -133,38 +135,29 @@ void rgb_to_hsv(image im)
             float hue;
 
             if (chroma == 0) {
-                if (w == 0 && h == 0) printf("test\n");
                 hue = 0;
             } else if (value == get_pixel(im, w, h, 0)) {
                 hue_gamma = (get_pixel(im, w, h, 1) - get_pixel(im, w, h, 2)) / chroma;
-                if (w == 0 && h == 0) printf("hue_gamma_0: %f\n", hue_gamma);
+                hue = set_hue(hue_gamma);
             } else if (value == get_pixel(im, w, h, 1)) {
                 hue_gamma = ((get_pixel(im, w, h, 2) - get_pixel(im, w, h, 0)) / chroma) + 2;
-                if (w == 0 && h == 0)printf("hue_gamma_1: %f\n", hue_gamma);
-            } else if (value == get_pixel(im, w, h, 1)) {
+                hue = set_hue(hue_gamma);
+            } else if (value == get_pixel(im, w, h, 2)) {
                 hue_gamma = ((get_pixel(im, w, h, 0) - get_pixel(im, w, h, 1)) / chroma) + 4;
-                if (w == 0 && h == 0) printf("hue_gamma_2: %f\n", hue_gamma);
+                hue = set_hue(hue_gamma);
             }
-
-            if (hue_gamma < 0) {
-                hue = (hue_gamma / 6) + 1;
-            } else {
-                hue = hue_gamma / 6;
-            }
-
-            if (w == 0 && h == 1) {
-                printf("hue_gamma: %f\n", hue_gamma);
-                printf("hue: %f\n", hue);
-            };
 
             set_pixel(im, w, h, 0, hue);
             set_pixel(im, w, h, 1, saturation);
             set_pixel(im, w, h, 2, value);
 
+            hue_gamma = 0;
+            hue = 0;
         }
     }
 
 }
+
 
 void hsv_to_rgb(image im)
 {
