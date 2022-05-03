@@ -150,9 +150,6 @@ void rgb_to_hsv(image im)
             set_pixel(im, w, h, 0, hue);
             set_pixel(im, w, h, 1, saturation);
             set_pixel(im, w, h, 2, value);
-
-            hue_gamma = 0;
-            hue = 0;
         }
     }
 
@@ -161,5 +158,5 @@ void rgb_to_hsv(image im)
 
 void hsv_to_rgb(image im)
 {
-    // TODO Fill this in
+
 }
