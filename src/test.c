@@ -812,7 +812,7 @@ void test_hw0()
     // test_clamp();
     // test_grayscale();
     test_rgb_to_hsv();
-    // test_hsv_to_rgb();
+    test_hsv_to_rgb();
     printf("%d tests, %d passed, %d failed\n", tests_total, tests_total-tests_fail, tests_fail);
 }
 void test_hw1()

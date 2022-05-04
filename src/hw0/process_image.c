@@ -92,10 +92,7 @@ void clamp_image(image im)
             }
         }
     }
-
-
 }
-
 
 // These might be handy
 float three_way_max(float a, float b, float c)
@@ -112,28 +109,22 @@ float set_hue(float hue_gamma) {
     return hue_gamma < 0 ? (hue_gamma / 6) + 1 : hue_gamma / 6;
 }
 
-
 void rgb_to_hsv(image im)
 {
     int width = im.w;
     int height = im.h;
+    float value, min, chroma, saturation, hue, hue_gamma;
 
     for (int w = 0; w < width; w++) {
         for (int h = 0; h < height; h++) {
-            // value
-            float value = three_way_max(get_pixel(im, w, h, 0), 
+            value = three_way_max(get_pixel(im, w, h, 0), 
                 get_pixel(im, w, h, 1), get_pixel(im, w, h, 2));
 
-            // saturation
-            float min = three_way_min(get_pixel(im, w, h, 0), 
+            min = three_way_min(get_pixel(im, w, h, 0), 
                 get_pixel(im, w, h, 1), get_pixel(im, w, h, 2));
-            float chroma = value - min;
-            float saturation = value == 0 ? 0 : chroma / value;
+            chroma = value - min;
+            saturation = value == 0 ? 0 : chroma / value;
             
-            // hue
-            float hue_gamma;
-            float hue;
-
             if (chroma == 0) {
                 hue = 0;
             } else if (value == get_pixel(im, w, h, 0)) {
@@ -155,8 +146,59 @@ void rgb_to_hsv(image im)
 
 }
 
-
+// https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB
 void hsv_to_rgb(image im)
 {
+    int width = im.w;
+    int height = im.h;
 
+    float hue, saturation, value, chroma, 
+        hue_gamma, red_temp, green_temp, blue_temp, x, m;
+
+    for (int w = 0; w < width; w++) {
+        for (int h = 0; h < height; h++) {
+            hue = get_pixel(im, w, h, 0);
+            saturation = get_pixel(im, w, h, 1);
+            value = get_pixel(im, w, h, 2);
+
+            chroma = saturation * value;
+
+            hue_gamma = hue * 6;
+            if (hue_gamma < 0) hue_gamma -= 1;
+
+            x = chroma * (1 - fabs(fmod(hue_gamma, 2) - 1));
+            if (w == 0 && h == 0) printf("test: %f\n", x);
+
+            if (hue_gamma <= 0 && hue_gamma < 1) {
+                red_temp = chroma;
+                green_temp = x;
+                blue_temp = 0;
+            } else if (hue_gamma <= 1 && hue_gamma < 2) {
+                red_temp = x;
+                green_temp = chroma;
+                blue_temp = 0;
+            } else if (hue_gamma <= 2 && hue_gamma < 3) {
+                red_temp = 0;
+                green_temp = chroma;
+                blue_temp = x;
+            } else if (hue_gamma <= 3 && hue_gamma < 4) {
+                red_temp = 0;
+                green_temp = x;
+                blue_temp = chroma;
+            } else if (hue_gamma <= 4 && hue_gamma < 5) {
+                red_temp = x;
+                green_temp = 0;
+                blue_temp = chroma;
+            } else if (hue_gamma <= 5 && hue_gamma < 6) {
+                red_temp = chroma;
+                green_temp = 0;
+                blue_temp = x;
+            }
+
+            m = value - chroma;
+            set_pixel(im, w, h, 0, red_temp + m);
+            set_pixel(im, w, h, 1, green_temp + m);
+            set_pixel(im, w, h, 2, blue_temp + m);
+        }       
+    }
 }
